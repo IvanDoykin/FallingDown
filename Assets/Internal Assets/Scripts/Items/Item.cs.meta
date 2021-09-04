@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1d4f37f62f93c2044ae24bc8d361d324
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - defaultSprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+  - icon: {instanceID: 0}
+  - itemPrefab: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
