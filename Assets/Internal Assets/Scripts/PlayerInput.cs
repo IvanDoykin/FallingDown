@@ -28,21 +28,54 @@ public class PlayerInput : NetworkBehaviour
         }
     }
 
+    [SerializeField] private float gravity = 0;
+    public float Gravity
+    {
+        get
+        {
+            return gravity;
+        }
+
+        set
+        {
+            if (gravity == 0 && value != 0)
+                gravity = value;
+        }
+    }
+
+    [SerializeField] private float speed = 0;
+    public float Speed
+    {
+        get
+        {
+            return speed;
+        }
+
+        set
+        {
+            if (speed == 0 && value != 0)
+                speed = value;
+        }
+    }
+
     private UIToWorldWrapper ui;
+    private CharacterController characterController;
+    Vector3 hackPos;
 
     public override void OnStartLocalPlayer()
     {
         if (hasAuthority != true)
             return;
 
+        hackPos = transform.position;
+
+        characterController = GetComponent<CharacterController>();
         ui = GameObject.Find("[UI]").GetComponent<UIToWorldWrapper>();
         ui.Player = this;
 
         Transform cameraTransform = GameObject.Find("Camera").transform;
         cameraTransform.SetParent(transform);
         //cameraTransform.localPosition = new Vector3(0, 1.67f, 0.7f); //for the 1-st person camera
-        cameraTransform.GetComponent<MouseLook>().axes = RotationAxes.MouseY;
-        cameraTransform.GetComponent<MouseLook>().player = this;
         cameraTransform.localPosition = new Vector3(0, 2f, -2.2f); //for the 3-rd person camera
     }
 
@@ -51,9 +84,9 @@ public class PlayerInput : NetworkBehaviour
         if (hasAuthority != true)
             return;
 
-        Transform cameraTransform = GameObject.Find("Camera").transform;
-        cameraTransform.SetParent(transform.root);
-        cameraTransform.position = Vector3.zero;
+        //Transform cameraTransform = GameObject.Find("Camera").transform;
+        //cameraTransform.SetParent(transform.root);
+        //cameraTransform.position = Vector3.zero;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -69,6 +102,26 @@ public class PlayerInput : NetworkBehaviour
     public void CmdGetHandleObjectFromServer(int cellIndex)
     {
         LevelNetwork.SetItemInPlayerHand(connectionToClient.connectionId, cellIndex);
+    }
+
+    [ClientRpc]
+    public void RpcDie()
+    {
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
+        Debug.LogError("You died");
     }
 
     [ClientRpc]
@@ -111,25 +164,27 @@ public class PlayerInput : NetworkBehaviour
             CmdRemove(2);
         }
 
-        CmdMove(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")));
+        float x = Input.GetAxis("Horizontal");
+        float y = Gravity;
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(x * Speed, y, z * Speed);
+        movement *= Time.fixedDeltaTime;
+        characterController.Move(movement);
+
+        CmdCheckMovement(transform.position);
+    }
+
+    [Command]
+    private void CmdCheckMovement(Vector3 playerPosition)
+    {
+        LevelNetwork.CheckPlayerMovement(connectionToClient.connectionId, playerPosition);
     }
 
     [Command]
     private void CmdRemove(int cellIndex)
     {
         LevelNetwork.RemoveItemFromPlayer(connectionToClient.connectionId, cellIndex);
-    }
-
-    [Command]
-    private void CmdMove(Vector2 direction)
-    {
-        LevelNetwork.MovePlayer(connectionToClient, direction);
-    }
-
-    [Command]
-    public void CmdRotate(Vector3 rotation, Transform obj)
-    {
-        obj.transform.rotation *= Quaternion.Euler(rotation);
     }
 
     [Client]

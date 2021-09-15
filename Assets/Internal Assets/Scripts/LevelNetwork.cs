@@ -7,23 +7,76 @@ public class LevelNetwork : NetworkManager
 {
     public static int InventorySize { get; private set; } = 4;
 
+    private const float Epsilon = 0.0001f;
     private const float Gravity = -9.81f;
-    private static readonly float Speed = 6f;
+    private static readonly float Speed = 60f;
     private static readonly float JumpForce = 1.0f;
 
     private static Dictionary<int, int[,]> PlayerInventories = new Dictionary<int, int[,]>();
     private static Dictionary<int, PlayerInput> Players = new Dictionary<int, PlayerInput>();
+    private static Dictionary<int, int> PlayersHealth = new Dictionary<int, int>();
+    private static Dictionary<int, Vector3> PlayersPositions = new Dictionary<int, Vector3>();
+
+    private int currentTick = 0;
 
     [Server]
     public override void OnStartServer()
     {
+        Debug.Log(Speed * Time.fixedDeltaTime);
         base.OnStartServer();
         NetworkServer.SpawnObjects();
     }
 
     [Server]
+    public override void OnServerAddPlayer(NetworkConnection connection)
+    {
+        base.OnServerAddPlayer(connection);
+
+        int[,] cells = new int[InventorySize, 2];
+        int health = 100;
+
+        PlayersHealth.Add(connection.connectionId, health);
+        PlayerInventories.Add(connection.connectionId, cells);
+        Players.Add(connection.connectionId, connection.identity.gameObject.GetComponent<PlayerInput>());
+        PlayersPositions.Add(connection.connectionId, connection.identity.transform.position);
+    }
+
+    [Server]
+    public override void OnServerDisconnect(NetworkConnection connection)
+    {
+        base.OnServerDisconnect(connection);
+
+        PlayersHealth.Remove(connection.connectionId);
+        PlayerInventories.Remove(connection.connectionId);
+        Players.Remove(connection.connectionId);
+        PlayersPositions.Remove(connection.connectionId);
+    }
+
+    [Server]
     private void FixedUpdate()
     {
+        currentTick++;
+        if (currentTick == 60)
+        {
+            currentTick = 0;
+            foreach (var player in Players)
+            {
+                Vector3 playerPosition;
+                if (PlayersPositions.TryGetValue(player.Key, out playerPosition) == false)
+                    throw new UnityException();
+
+                playerPosition.y = player.Value.transform.position.y;
+                Debug.Log("length = " + (player.Value.transform.position - playerPosition).sqrMagnitude);
+                Debug.Log("max = " + Speed * Speed * Time.fixedDeltaTime * Time.deltaTime * 225);
+                if ((player.Value.transform.position - playerPosition).sqrMagnitude > Speed * Speed * Time.fixedDeltaTime * Time.deltaTime * 225)
+                {
+                    Debug.LogError(player.Value.netIdentity.transform.position);
+                    Debug.LogError(playerPosition);
+                    //NetworkServer.RemovePlayerForConnection(player.Value.connectionToClient, true);
+                }
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             Debug.Log("===== INVENTORY INFORMATION =====");
@@ -47,26 +100,41 @@ public class LevelNetwork : NetworkManager
     }
 
     [Server]
-    public static void MovePlayer(NetworkConnection connection, Vector2 direction)
+    public static void CheckPlayerMovement(int playerId, Vector3 playerPosition)
     {
-        Vector3 movement = new Vector3(direction.x * Speed, 0, direction.y * Speed);
-        movement = Vector3.ClampMagnitude(movement, Speed);
-        movement.y = Gravity;
-        movement *= Time.deltaTime;
-        movement = connection.identity.transform.TransformDirection(movement);
+        Vector3 newPos = new Vector3();
+        if (PlayersPositions.TryGetValue(playerId, out newPos) == false)
+            throw new UnityException();
 
-        connection.identity.GetComponent<CharacterController>().Move(movement);
+        PlayerInput player;
+        if (Players.TryGetValue(playerId, out player) == false)
+            throw new UnityException();
+
+        Vector2 tempPos = new Vector2(newPos.x - playerPosition.x, newPos.z - playerPosition.z);
+        Debug.Log("temp = " + tempPos);
+        if (tempPos.sqrMagnitude > 2 * Speed * Speed * Time.fixedDeltaTime * Time.fixedDeltaTime + Epsilon)
+        {
+            //NetworkServer.RemovePlayerForConnection(player.connectionToClient, true);
+        }
+
+        newPos = playerPosition;
+        PlayersPositions.Remove(playerId);
+        PlayersPositions.Add(playerId, newPos);
     }
 
     [Server]
-    public override void OnServerAddPlayer(NetworkConnection connection)
+    public static void ApplyDamageToPlayer(int playerId, int damage)
     {
-        base.OnServerAddPlayer(connection);
+        int health;
+        PlayersHealth.TryGetValue(playerId, out health);
 
-        int[,] cells = new int[InventorySize, 2];
-
-        PlayerInventories.Add(connection.connectionId, cells);
-        Players.Add(connection.connectionId, connection.identity.gameObject.GetComponent<PlayerInput>());
+        health = Mathf.Clamp(health - damage, 0, 100);
+        if (health == 0)
+        {
+            PlayerInput player;
+            Players.TryGetValue(playerId, out player);
+            player.RpcDie();
+        }
     }
 
     [Server]
@@ -75,15 +143,15 @@ public class LevelNetwork : NetworkManager
         int[,] temp = new int[InventorySize, 2];
         PlayerInventories.TryGetValue(playerId, out temp);
 
-        for (int i = 0; i < InventorySize; i++)
+        for (int cellIndex = 0; cellIndex < InventorySize; cellIndex++)
         {
-            if (temp[i, 0] == 0 || temp[i, 0] == objectId)
+            if (temp[cellIndex, 0] == 0 || temp[cellIndex, 0] == objectId)
             {
-                temp[i, 0] = objectId;
-                temp[i, 1] ++;
+                temp[cellIndex, 0] = objectId;
+                temp[cellIndex, 1]++;
                 PlayerInventories.Remove(playerId);
                 PlayerInventories.Add(playerId, temp);
-                return i;
+                return cellIndex;
             }
         }
 
@@ -139,14 +207,5 @@ public class LevelNetwork : NetworkManager
 
         PlayerInventories.Remove(playerId);
         PlayerInventories.Add(playerId, temp);
-    }
-
-    [Server]
-    public override void OnServerDisconnect(NetworkConnection connection)
-    {
-        base.OnServerDisconnect(connection);
-
-        PlayerInventories.Remove(connection.connectionId);
-        Players.Remove(connection.connectionId);
     }
 }

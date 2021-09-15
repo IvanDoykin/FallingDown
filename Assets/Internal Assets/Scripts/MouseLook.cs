@@ -33,41 +33,17 @@ public class MouseLook : NetworkBehaviour
         }
     }
 
-    private const float minimumVert = -90f;
-    private const float maximumVert = 90f;
+    private const float minimumVert = -89f;
+    private const float maximumVert = 89f;
 
-    public PlayerInput player;
     Vector2 rotation = Vector2.zero;
-    [Client]
-    private void Start()
-    {
-        if (player != null)
-            return;
-
-        player = GetComponent<PlayerInput>();
-        axes = RotationAxes.MouseX;
-    }
 
     [Client]
     private void FixedUpdate()
     {
-        if (hasAuthority != true && axes != RotationAxes.MouseY)
-            return;
-
-        switch (axes)
-        {
-            case RotationAxes.MouseX:
-                player.CmdRotate(new Vector3(0, Input.GetAxis("Mouse X") * sensitivityHorizontal, 0), transform);
-                break;
-
-            case RotationAxes.MouseY:
-                rotation.y += Input.GetAxis("Mouse Y") * sensitivityVertical;
-                rotation.y = Mathf.Clamp(rotation.y, minimumVert, maximumVert);
-                var xQuat = Quaternion.AngleAxis(rotation.x, Vector3.up);
-                var yQuat = Quaternion.AngleAxis(rotation.y, Vector3.left);
-
-                transform.localRotation = xQuat * yQuat;
-                break;
-        }
+        rotation.x -= Input.GetAxis("Mouse Y") * sensitivityVertical;
+        rotation.x = Mathf.Clamp(rotation.x, minimumVert, maximumVert);
+        float rotationY = transform.localEulerAngles.y;
+        transform.localEulerAngles = new Vector3(rotation.x, rotationY, 0);
     }
 }
