@@ -43,18 +43,17 @@ namespace Mirror
             }
 
             // client ready
-            //if (NetworkClient.isConnected && !NetworkClient.ready)
-            //{
-            //    if (GUILayout.Button("Client Ready"))
-            //    {
-            //        Debug.Log("client ready");
-            //        NetworkClient.Ready();
-            //        if (NetworkClient.localPlayer == null)
-            //        {
-            //            NetworkClient.AddPlayer();
-            //        }
-            //    }
-            //}
+            if (NetworkClient.isConnected && !NetworkClient.ready)
+            {
+                if (GUILayout.Button("Client Ready"))
+                {
+                    NetworkClient.Ready();
+                    if (NetworkClient.localPlayer == null)
+                    {
+                        NetworkClient.AddPlayer();
+                    }
+                }
+            }
 
             StopButtons();
 
@@ -78,10 +77,8 @@ namespace Mirror
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Client"))
                 {
-                    Screen.SetResolution(600, 600, false);
                     manager.StartClient();
                 }
-
                 manager.networkAddress = GUILayout.TextField(manager.networkAddress);
                 GUILayout.EndHorizontal();
 
@@ -93,11 +90,7 @@ namespace Mirror
                 }
                 else
                 {
-                    if (GUILayout.Button("Server Only"))
-                    {
-                        Screen.SetResolution(300, 300, false);
-                        manager.StartServer();
-                    }
+                    if (GUILayout.Button("Server Only")) manager.StartServer();
                 }
             }
             else

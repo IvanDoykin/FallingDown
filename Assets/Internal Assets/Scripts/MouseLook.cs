@@ -33,17 +33,25 @@ public class MouseLook : NetworkBehaviour
         }
     }
 
-    private const float minimumVert = -89f;
-    private const float maximumVert = 89f;
+    private const float minimumVert = -90f;
+    private const float maximumVert = 90f;
 
-    Vector2 rotation = Vector2.zero;
+    private float rotationX = 0;
 
     [Client]
     private void FixedUpdate()
     {
-        rotation.x -= Input.GetAxis("Mouse Y") * sensitivityVertical;
-        rotation.x = Mathf.Clamp(rotation.x, minimumVert, maximumVert);
-        float rotationY = transform.localEulerAngles.y;
-        transform.localEulerAngles = new Vector3(rotation.x, rotationY, 0);
+        if (axes == RotationAxes.MouseX)
+        {
+            transform.Rotate(0, Input.GetAxis("Mouse X") * sensitivityHorizontal, 0);
+        }
+
+        if (axes == RotationAxes.MouseY)
+        {
+            rotationX -= Input.GetAxis("Mouse Y") * sensitivityVertical;
+            rotationX = Mathf.Clamp(rotationX, minimumVert, maximumVert);
+            float rotationY = transform.localEulerAngles.y;
+            transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);
+        }
     }
 }

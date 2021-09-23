@@ -6,6 +6,10 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerInput : NetworkBehaviour
 {
+    [SyncVar (hook = nameof(SetItemInHands))] public int HandleObjectId;
+    [SyncVar(hook = nameof(SyncHealthWithUi))] public int Health;
+    [SyncVar] public int SelectedCell;
+
     [SerializeField] private Transform hand;
     public Transform Hand
     {
@@ -16,15 +20,6 @@ public class PlayerInput : NetworkBehaviour
         private set
         {
             hand = value;
-        }
-    }
-
-    private int activeCell = -1;
-    public int ActiveCell
-    {
-        get
-        {
-            return activeCell;
         }
     }
 
@@ -60,14 +55,17 @@ public class PlayerInput : NetworkBehaviour
 
     private UIToWorldWrapper ui;
     private CharacterController characterController;
-    Vector3 hackPos;
 
     public override void OnStartLocalPlayer()
     {
+        PlayerInput[] players = (PlayerInput[])FindObjectsOfType(typeof(PlayerInput));
+        foreach (var currentPlayer in players)
+        {
+            currentPlayer.SetItemInHands();
+        }
+
         if (hasAuthority != true)
             return;
-
-        hackPos = transform.position;
 
         characterController = GetComponent<CharacterController>();
         ui = GameObject.Find("[UI]").GetComponent<UIToWorldWrapper>();
@@ -75,8 +73,8 @@ public class PlayerInput : NetworkBehaviour
 
         Transform cameraTransform = GameObject.Find("Camera").transform;
         cameraTransform.SetParent(transform);
-        //cameraTransform.localPosition = new Vector3(0, 1.67f, 0.7f); //for the 1-st person camera
-        cameraTransform.localPosition = new Vector3(0, 2f, -2.2f); //for the 3-rd person camera
+        cameraTransform.localPosition = new Vector3(0, 1.67f, 0.7f); //for the 1-st person camera
+        //cameraTransform.localPosition = new Vector3(0, 2f, -2.2f); //for the 3-rd person camera
     }
 
     public override void OnStopClient()
@@ -84,18 +82,8 @@ public class PlayerInput : NetworkBehaviour
         if (hasAuthority != true)
             return;
 
-        //Transform cameraTransform = GameObject.Find("Camera").transform;
-        //cameraTransform.SetParent(transform.root);
-        //cameraTransform.position = Vector3.zero;
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    [Command]
-    public void CmdSetActiveCell(int newActiveCell)
-    {
-        activeCell = newActiveCell;
     }
 
     [Command]
@@ -107,37 +95,37 @@ public class PlayerInput : NetworkBehaviour
     [ClientRpc]
     public void RpcDie()
     {
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
-        Debug.LogError("You died");
+        //some die :)
     }
 
-    [ClientRpc]
-    public void RpcSetItemInHands(NetworkIdentity identity, PlayerInput player)
+    private void SyncHealthWithUi(int oldValue, int newValue)
     {
-        HandleObject handleObject = player.Hand.GetComponentInChildren<HandleObject>();
-        if (handleObject != null)
-            NetworkServer.Destroy(handleObject.gameObject);
-
-        identity.transform.SetParent(player.Hand);
-        identity.transform.localPosition = Vector3.zero;
-        Destroy(identity.transform.GetComponent<Collider>());
+        if (hasAuthority == true)
+            ui.ChangeHealth(newValue);
     }
 
-    [Command]
-    private void CmdGetItem(int id, GameObject itemObj)
+    private void SetItemInHands(int oldValue = 0, int newValue = 0)
+    {
+        Debug.Log("set item");
+        HandleObject handleObject = Hand.GetComponentInChildren<HandleObject>();
+        if (handleObject != null)
+        {
+            Destroy(handleObject.gameObject);
+        }
+
+        if (HandleObjectId == 0)
+        {
+            Debug.Log("nol");
+            return;
+        }
+
+        GameObject newItem = Instantiate(Resources.Load<Item>("HandleObjects/" + HandleObjectId).ItemPrefab, Hand);
+        newItem.transform.localPosition = Vector3.zero;
+        Destroy(newItem.transform.GetComponent<Collider>());
+    }
+
+    [Server]
+    private void GetItem(int id, GameObject itemObj)
     {
         int newItemIndex = LevelNetwork.AddItemToPlayer(connectionToClient.connectionId, id);
         if (newItemIndex != -1)
@@ -151,6 +139,7 @@ public class PlayerInput : NetworkBehaviour
     public void RpcUiUpdate(int cellIndex, int itemObjId)
     {
         ui?.SetSpriteToCell(cellIndex, itemObjId);
+        ui?.AddItem(cellIndex);
     }
 
     [Client]
@@ -159,9 +148,17 @@ public class PlayerInput : NetworkBehaviour
         if (hasAuthority != true)
             return;
 
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetMouseButtonDown(1))
         {
-            CmdRemove(2);
+            if (SelectedCell == -1)
+                return;
+
+            CmdRemove(SelectedCell);
+            ui.RemoveItem(SelectedCell);
+            if (ui.GetCellAmounts(SelectedCell) == 0)
+            {
+                Destroy(Hand.GetComponentInChildren<HandleObject>().gameObject);
+            }
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -170,6 +167,7 @@ public class PlayerInput : NetworkBehaviour
 
         Vector3 movement = new Vector3(x * Speed, y, z * Speed);
         movement *= Time.fixedDeltaTime;
+        movement = transform.TransformDirection(movement);
         characterController.Move(movement);
 
         CmdCheckMovement(transform.position);
@@ -187,13 +185,13 @@ public class PlayerInput : NetworkBehaviour
         LevelNetwork.RemoveItemFromPlayer(connectionToClient.connectionId, cellIndex);
     }
 
-    [Client]
+    [Server]
     private void OnTriggerEnter(Collider other)
     {
         HandleObject handleObject = other.GetComponent<HandleObject>();
         if (handleObject != null)
         {
-            CmdGetItem(handleObject.HandleItem.Id, handleObject.gameObject);
+            GetItem(handleObject.HandleItem.Id, handleObject.gameObject);
         }
     }
 }

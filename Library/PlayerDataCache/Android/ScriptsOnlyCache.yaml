@@ -12,9 +12,10 @@ ScriptsOnlyBuild:
     - PlayerInput
     - UIToWorldWrapper
     Mirror.Components.dll:
-    - Mirror.NetworkAnimator
+    - Mirror.NetworkPingDisplay
     - Mirror.NetworkTransform
     Mirror.dll:
+    - Mirror.LatencySimulation
     - Mirror.NetworkIdentity
     - Mirror.NetworkStartPosition
     - kcp2k.KcpTransport
@@ -144,6 +145,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1986}
     - Class: 114
+      Script: {instanceID: 2008}
+    - Class: 114
       Script: {instanceID: 2068}
     - Class: 114
       Script: {instanceID: 2078}
@@ -210,8 +213,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4776}
     - Class: 114
-      Script: {instanceID: 4892}
-    - Class: 114
       Script: {instanceID: 5242}
     - Class: 114
       Script: {instanceID: 5422}
@@ -226,6 +227,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 5764}
     - Class: 114
+      Script: {instanceID: 5860}
+    - Class: 114
       Script: {instanceID: 5884}
     - Class: 114
       Script: {instanceID: 5934}
@@ -237,8 +240,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 6018}
     - Class: 114
       Script: {instanceID: 6050}
-    - Class: 114
-      Script: {instanceID: 6268}
     - Class: 114
       Script: {instanceID: 6340}
     - Class: 114
@@ -295,8 +296,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1610}
     - Class: 114
-      Script: {instanceID: 1616}
-    - Class: 114
       Script: {instanceID: 1958}
     - Class: 114
       Script: {instanceID: 2446}
@@ -314,6 +313,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 3858}
     - Class: 114
       Script: {instanceID: 4892}
+    - Class: 114
+      Script: {instanceID: 5764}
     - Class: 114
       Script: {instanceID: 5976}
     - Class: 114
@@ -1073,7 +1074,7 @@ ScriptsOnlyBuild:
     className: SceneInterestManagement
   - hash:
       serializedVersion: 2
-      Hash: 7f6e08321f26512e351a205a0d32e90f
+      Hash: 449afb5fe2611a7bba91b5857ca91fe2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MouseLook
@@ -1427,7 +1428,7 @@ ScriptsOnlyBuild:
     className: SignalEmitter
   - hash:
       serializedVersion: 2
-      Hash: 54eb6dcfdeb3538dad6fc48f45455f14
+      Hash: 63b77f747ca9df902689ebe3b1bead1c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerInput

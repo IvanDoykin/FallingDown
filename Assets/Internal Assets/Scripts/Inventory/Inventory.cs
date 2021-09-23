@@ -22,15 +22,6 @@ public class Inventory
         }
     }
 
-    //private void Start()
-    //{
-    //    Cell[] tempCells = GetComponentsInChildren<Cell>();
-    //    foreach (var cell in tempCells)
-    //    {
-    //        cells.Add(cell);
-    //    }
-    //}
-
     public void AddItem(GameObject newItem)
     {
         Item item = newItem.GetComponent<HandleObject>().HandleItem;
@@ -39,7 +30,6 @@ public class Inventory
         if (cell != null && item != null)
         {
             cell.SetItem(item);
-            //Destroy(newItem);
         }
     }
 

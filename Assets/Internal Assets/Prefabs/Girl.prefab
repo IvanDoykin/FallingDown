@@ -1266,6 +1266,8 @@ GameObject:
   - component: {fileID: 5217733191666479801}
   - component: {fileID: 4524844759425058439}
   - component: {fileID: -7476854049291843000}
+  - component: {fileID: -4286654363885943777}
+  - component: {fileID: -1241096699049039401}
   m_Layer: 0
   m_Name: Girl
   m_TagString: Untagged
@@ -1326,7 +1328,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   clientAuthority: 1
-  sendInterval: 0.015
+  sendInterval: 0.05
   syncPosition: 1
   syncRotation: 1
   syncScale: 0
@@ -1336,7 +1338,7 @@ MonoBehaviour:
   bufferTimeMultiplier: 3
   bufferSizeLimit: 64
   catchupThreshold: 6
-  catchupMultiplier: 0.05
+  catchupMultiplier: 0.1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
@@ -1351,7 +1353,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 3ff3ecc24555dca4bae19f7f34ea7b58, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -1409,7 +1411,7 @@ MonoBehaviour:
   syncInterval: 0.1
   hand: {fileID: 6709758347298304035}
   gravity: -9.81
-  speed: 60
+  speed: 5
 --- !u!114 &4524844759425058439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1436,6 +1438,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: {r: 1, g: 0, b: 0, a: 1}
   padding: 2
+--- !u!114 &-4286654363885943777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5217733191666479802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eab77751367552641a7967fb05bc6f10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  axes: 0
+  sensitivityHorizontal: 9
+  sensitivityVertical: 9
+--- !u!114 &-1241096699049039401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5217733191666479802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.15
+  clientAuthority: 1
+  animator: {fileID: 5217733191666479783}
 --- !u!1 &5388024348684494494
 GameObject:
   m_ObjectHideFlags: 0
