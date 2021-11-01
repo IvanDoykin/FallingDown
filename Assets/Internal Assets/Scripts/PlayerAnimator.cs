@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    private PlayerInput player;
+    private Player player;
     private Animator animator;
 
     private void Start()
     {
-        player = GetComponent<PlayerInput>();
+        player = GetComponent<Player>();
         animator = GetComponent<Animator>();
     }
 

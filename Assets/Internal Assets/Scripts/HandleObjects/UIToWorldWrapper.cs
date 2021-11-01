@@ -14,7 +14,7 @@ public class UIToWorldWrapper : NetworkBehaviour
     [SerializeField] private Transform panel;
     [SerializeField] private TextMeshProUGUI health;
 
-    public PlayerInput Player { get; set; }
+    public Player Player { get; set; }
     private CellView[] cellViews = new CellView[LevelNetwork.InventorySize];
 
     [Client]

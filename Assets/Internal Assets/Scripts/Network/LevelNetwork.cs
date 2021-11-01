@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class LevelNetwork : NetworkManager
 {
@@ -13,10 +14,9 @@ public class LevelNetwork : NetworkManager
     private static readonly float JumpForce = 1.0f;
 
     private static Dictionary<int, int[,]> PlayerInventories = new Dictionary<int, int[,]>();
-    private static Dictionary<int, PlayerInput> Players = new Dictionary<int, PlayerInput>();
+    private static Dictionary<int, Player> Players = new Dictionary<int, Player>();
     private static Dictionary<int, Vector3> PlayersPositions = new Dictionary<int, Vector3>();
-
-    private int currentTick = 0;
+    private int frame = 0;
 
     [Server]
     public override void OnStartServer()
@@ -32,10 +32,10 @@ public class LevelNetwork : NetworkManager
         base.OnServerAddPlayer(connection);
 
         int[,] cells = new int[InventorySize, 2];
-        connection.identity.GetComponent<PlayerInput>().Health = 100;
+        connection.identity.GetComponent<Player>().Health = 100;
 
         PlayerInventories.Add(connection.connectionId, cells);
-        Players.Add(connection.connectionId, connection.identity.GetComponent<PlayerInput>());
+        Players.Add(connection.connectionId, connection.identity.GetComponent<Player>());
         PlayersPositions.Add(connection.connectionId, connection.identity.transform.position);
     }
 
@@ -79,11 +79,12 @@ public class LevelNetwork : NetworkManager
             Debug.Log("=======================================");
         }
 
+        frame++;
         return; //disable check movement
-        currentTick++;
-        if (currentTick == 60)
+
+        if (frame == 60)
         {
-            currentTick = 0;
+            frame = 0;
             foreach (var player in Players)
             {
                 Vector3 playerPosition;
@@ -110,7 +111,7 @@ public class LevelNetwork : NetworkManager
         if (PlayersPositions.TryGetValue(playerId, out newPos) == false)
             throw new UnityException();
 
-        PlayerInput player;
+        Player player;
         if (Players.TryGetValue(playerId, out player) == false)
             throw new UnityException();
 
@@ -152,7 +153,7 @@ public class LevelNetwork : NetworkManager
     public static void SetItemInPlayerHand(int playerId, int cellIndex)
     {
         Debug.Log("set item = " + cellIndex);
-        PlayerInput player;
+        Player player;
         Players.TryGetValue(playerId, out player);
 
         int[,] tempInventory = new int[InventorySize, 2];
@@ -175,7 +176,7 @@ public class LevelNetwork : NetworkManager
     }
 
     [Server]
-    public static void SetItemInHands(NetworkIdentity identity, PlayerInput player)
+    public static void SetItemInHands(NetworkIdentity identity, Player player)
     {
         HandleObject handleObject = player.Hand.GetComponentInChildren<HandleObject>();
         if (handleObject != null)
@@ -191,6 +192,37 @@ public class LevelNetwork : NetworkManager
     }
 
     [Server]
+    private static void SimulateAction(int frameId, float clientSubFrame, Action action)
+    {
+        ActionSimulator.Simulate(frameId, clientSubFrame, action);
+    }
+
+    [Server]
+    public static void ShootSimulate(int frameId, float clientSubFrame, int playerId, Vector3 direction)
+    {
+        Vector3 newPos = new Vector3();
+        if (PlayersPositions.TryGetValue(playerId, out newPos) == false)
+            throw new UnityException();
+        newPos += new Vector3(0, 1.67f, 0.7f);
+
+        Action action = () =>
+        {
+            Ray ray = new Ray(newPos, direction);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 1000f))
+            {
+                Player player = hit.transform.GetComponent<PlayerCollider>()?.GetComponentInParent<Player>();
+                if (player != null)
+                {
+                    player.Health -= 25;
+                }
+            }
+        };
+
+        SimulateAction(frameId, clientSubFrame, action);
+    }
+    [Server]
     public static void RemoveItemFromPlayer(int playerId, int cellIndex)
     {
         int[,] temp = new int[InventorySize, 2];
@@ -203,7 +235,7 @@ public class LevelNetwork : NetworkManager
         {
             temp[cellIndex, 0] = 0;
 
-            PlayerInput player;
+            Player player;
             if (Players.TryGetValue(playerId, out player) != true)
                 throw new UnityException();
 

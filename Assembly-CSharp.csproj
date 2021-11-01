@@ -63,18 +63,22 @@
     <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\UIToWorldWrapper.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\Key.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\CellView.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\Items\BlockItem.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\SimulatedObject.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\Network\AutoConnector.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\MouseLook.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\LocPlayer.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\PlayerAnimator.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\Block.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\SimulationFrameData.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\Items\KeyItem.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\Multiplayer\NetworkHUD.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\HandleObject.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\PlayerCollider.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\Inventory\Panel.cs" />
     <Compile Include="Assets\Internal Assets\Scripts\Inventory\Cell.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\PlayerInput.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Items\BlockItem.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\Block.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Internal Assets\Scripts\ActionSimulator.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
@@ -336,6 +340,12 @@
     </Reference>
     <Reference Include="Mono.CecilX.Mdb">
       <HintPath>Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.5f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.5f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.5f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>

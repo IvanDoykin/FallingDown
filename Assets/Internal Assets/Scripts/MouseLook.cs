@@ -33,10 +33,19 @@ public class MouseLook : NetworkBehaviour
         }
     }
 
+    private Quaternion mouseRotation;
+    public Quaternion MouseRotation
+    {
+        get
+        {
+            return mouseRotation;
+        }
+    }
+
     private const float minimumVert = -90f;
     private const float maximumVert = 90f;
 
-    private float rotationX = 0;
+    public float RotationX { get; private set; } = 0;
 
     [Client]
     private void FixedUpdate()
@@ -48,10 +57,11 @@ public class MouseLook : NetworkBehaviour
 
         if (axes == RotationAxes.MouseY)
         {
-            rotationX -= Input.GetAxis("Mouse Y") * sensitivityVertical;
-            rotationX = Mathf.Clamp(rotationX, minimumVert, maximumVert);
+            RotationX -= Input.GetAxis("Mouse Y") * sensitivityVertical;
+            RotationX = Mathf.Clamp(RotationX, minimumVert, maximumVert);
             float rotationY = transform.localEulerAngles.y;
-            transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);
+            transform.localEulerAngles = new Vector3(RotationX, rotationY, 0);
+            //Debug.Log("Angles = " + transform.rotation.eulerAngles);
         }
     }
 }
