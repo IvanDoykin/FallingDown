@@ -3,11 +3,10 @@ using UnityEngine.UI;
 using Mirror;
 using System.Collections;
 
-[RequireComponent(typeof(CharacterController))]
-public class Player : SimulatedObject
+public class Player : NetworkBehaviour
 {
-    [SyncVar (hook = nameof(SetItemInHands))] public int HandleObjectId;
-    [SyncVar (hook = nameof(SyncHealthWithUi))] public int Health;
+    [SyncVar(hook = nameof(SetItemInHands))] public int HandleObjectId;
+    [SyncVar(hook = nameof(SyncHealthWithUi))] public int Health;
     [SyncVar] public int SelectedCell;
     [SyncVar] public int Frame;
 
@@ -55,8 +54,14 @@ public class Player : SimulatedObject
     }
 
     private UIToWorldWrapper ui;
-    private CharacterController characterController;
+    private Rigidbody characterController;
     private MouseLook cameraLook;
+    private SimulatedObject simulatedObject;
+
+    private void Start()
+    {
+        simulatedObject = GetComponent<SimulatedObject>();
+    }
 
     public override void OnStartLocalPlayer()
     {
@@ -70,7 +75,7 @@ public class Player : SimulatedObject
             return;
 
         cameraLook = GetComponentInChildren<MouseLook>();
-        characterController = GetComponent<CharacterController>();
+        characterController = GetComponent<Rigidbody>();
         ui = GameObject.Find("[UI]").GetComponent<UIToWorldWrapper>();
         ui.Player = this;
 
@@ -163,41 +168,36 @@ public class Player : SimulatedObject
                 Destroy(Hand.GetComponentInChildren<HandleObject>().gameObject);
             }
         }
-        
+
         float x = Input.GetAxis("Horizontal");
         float y = Gravity;
         float z = Input.GetAxis("Vertical");
 
         Vector3 movement = new Vector3(x * Speed, y, z * Speed);
-        movement *= Time.fixedDeltaTime;
         movement = transform.TransformDirection(movement);
-        characterController.Move(movement);
+        Debug.Log("move = " + movement);
+        characterController.MovePosition(transform.position + new Vector3(movement.x, Gravity, movement.z) * Time.fixedDeltaTime);
 
         CmdCheckMovement(transform.position);
 
         if (Input.GetMouseButtonDown(0))
         {
             float rotationX = GetComponentsInChildren<MouseLook>()[1].RotationX * -1;
-            CmdShoot(transform.position, transform.forward + new Vector3(0, Mathf.Sin(rotationX * 3.1415f / 180f), 0));
+            CmdShoot(transform.forward + new Vector3(0, Mathf.Sin(rotationX * 3.1415f / 180f), 0), transform.rotation * new Vector3(0, 1.7f, 0.7f), simulatedObject.frameKeys[simulatedObject.frameKeys.Count - 1]);
         }
     }
 
     [Command]
-    private void CmdShoot(Vector3 position, Vector3 cameraRotation)
+    private void CmdShoot(Vector3 cameraRotation, Vector3 additionalVector, int frameId)
     {
-        Debug.Log("Simulate frame = " + frameKeys[frameKeys.Count - 1]);
-        LevelNetwork.ShootSimulate(frameKeys[frameKeys.Count - 1], 1, connectionToClient.connectionId, cameraRotation);
-        return;
-        RaycastHit hit;
-        Ray ray = new Ray(position, cameraRotation);
-        if (Physics.Raycast(ray, out hit))
-        {
-            Player hitPlayer = hit.transform.GetComponent<Player>();
-            if (hitPlayer != null)
-            {
-                hitPlayer.Health -= 40;
-            }
-        }
+        LevelNetwork.ShootSimulate(frameId, 1, connectionToClient.connectionId, cameraRotation, additionalVector);
+    }
+
+    [ClientRpc]
+    public void RpcSetPosition(Vector3 firstPosition, Vector3 secondPosition, Quaternion rotation, float clientSubFrame)
+    {
+        transform.position = Vector3.Lerp(firstPosition, secondPosition, clientSubFrame);
+        transform.rotation = rotation;
     }
 
     [Command]

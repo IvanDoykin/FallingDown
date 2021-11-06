@@ -1757,7 +1757,7 @@ MonoBehaviour:
   onlineScene: Assets/Internal Assets/Scenes/TestLevel.unity
   transport: {fileID: 1463566190}
   networkAddress: localhost
-  maxConnections: 100
+  maxConnections: 4
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}

@@ -198,24 +198,30 @@ public class LevelNetwork : NetworkManager
     }
 
     [Server]
-    public static void ShootSimulate(int frameId, float clientSubFrame, int playerId, Vector3 direction)
+    public static void ShootSimulate(int frameId, float clientSubFrame, int playerId, Vector3 direction, Vector3 additionalVector)
     {
         Vector3 newPos = new Vector3();
         if (PlayersPositions.TryGetValue(playerId, out newPos) == false)
             throw new UnityException();
-        newPos += new Vector3(0, 1.67f, 0.7f);
+        newPos += additionalVector;
 
         Action action = () =>
         {
+            Debug.DrawRay(newPos, direction, Color.red, 100f);
             Ray ray = new Ray(newPos, direction);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                Player player = hit.transform.GetComponent<PlayerCollider>()?.GetComponentInParent<Player>();
+                Debug.Log(hit.collider.name);
+                Player player = hit.collider?.GetComponent<PlayerCollider>()?.GetComponentInParent<Player>();
                 if (player != null)
                 {
                     player.Health -= 25;
+                }
+                else
+                {
+                    Debug.Log("No player collider at ray");
                 }
             }
         };

@@ -10,7 +10,6 @@ public class ActionSimulator : NetworkBehaviour
     [Server]
     public static void Simulate(int frameId, float clientSubFrame, Action action)
     {
-        Debug.Log("frameId = " + frameId);
         if (frameId == Time.frameCount)
             frameId = Time.frameCount - 1;
 
@@ -21,15 +20,14 @@ public class ActionSimulator : NetworkBehaviour
 
         action.Invoke();
 
-        foreach (var simulatedObject in SimulatedObjects)
-        {
-            simulatedObject.ResetTransform();
-        }
+        //foreach (var simulatedObject in SimulatedObjects)
+        //{
+        //    simulatedObject.ResetTransform();
+        //}
 
         Debug.Log("all done");
     }
 
-    [Server]
     private void FixedUpdate()
     {
         foreach (var simulatedObject in SimulatedObjects)
