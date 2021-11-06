@@ -107,12 +107,11 @@ public class LevelNetwork : NetworkManager
     [Server]
     public static void CheckPlayerMovement(int playerId, Vector3 playerPosition)
     {
-        Vector3 newPos = new Vector3();
-        if (PlayersPositions.TryGetValue(playerId, out newPos) == false)
+        Vector3 newPos;
+        if (!PlayersPositions.TryGetValue(playerId, out newPos))
             throw new UnityException();
 
-        Player player;
-        if (Players.TryGetValue(playerId, out player) == false)
+        if (!Players.TryGetValue(playerId, out Player player))
             throw new UnityException();
 
         Vector2 tempPos = new Vector2(newPos.x - playerPosition.x, newPos.z - playerPosition.z);
@@ -129,8 +128,8 @@ public class LevelNetwork : NetworkManager
     [Server]
     public static int AddItemToPlayer(int playerId, int objectId)
     {
-        int[,] temp = new int[InventorySize, 2];
-        PlayerInventories.TryGetValue(playerId, out temp);
+        if (!PlayerInventories.TryGetValue(playerId, out int[,] temp))
+            throw new UnityException();
 
         for (int cellIndex = 0; cellIndex < InventorySize; cellIndex++)
         {
@@ -153,11 +152,9 @@ public class LevelNetwork : NetworkManager
     public static void SetItemInPlayerHand(int playerId, int cellIndex)
     {
         Debug.Log("set item = " + cellIndex);
-        Player player;
-        Players.TryGetValue(playerId, out player);
+        Players.TryGetValue(playerId, out Player player);
 
-        int[,] tempInventory = new int[InventorySize, 2];
-        if (PlayerInventories.TryGetValue(playerId, out tempInventory) != true)
+        if (!PlayerInventories.TryGetValue(playerId, out int[,] tempInventory))
             throw new UnityException();
 
         if (tempInventory[cellIndex, 0] == 0)

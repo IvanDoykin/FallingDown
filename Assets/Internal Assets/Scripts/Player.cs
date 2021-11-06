@@ -108,7 +108,7 @@ public class Player : NetworkBehaviour
 
     private void SyncHealthWithUi(int oldValue, int newValue)
     {
-        if (hasAuthority == true)
+        if (hasAuthority)
             ui.ChangeHealth(newValue);
     }
 
@@ -150,10 +150,10 @@ public class Player : NetworkBehaviour
         ui?.AddItem(cellIndex);
     }
 
-    [Client]
+    [ClientCallback]
     private void FixedUpdate()
     {
-        if (hasAuthority != true)
+        if (!hasAuthority)
             return;
 
         if (Input.GetMouseButtonDown(1))
@@ -182,6 +182,7 @@ public class Player : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("kekek");
             float rotationX = GetComponentsInChildren<MouseLook>()[1].RotationX * -1;
             CmdShoot(transform.forward + new Vector3(0, Mathf.Sin(rotationX * 3.1415f / 180f), 0), transform.rotation * new Vector3(0, 1.7f, 0.7f), simulatedObject.frameKeys[simulatedObject.frameKeys.Count - 1]);
         }

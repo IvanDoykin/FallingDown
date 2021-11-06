@@ -28,6 +28,11 @@ public class ActionSimulator : NetworkBehaviour
         Debug.Log("all done");
     }
 
+    public static void SyncClientStartFrame(SimulatedObject simulatedObject)
+    {
+        simulatedObject.StartClientFrame = Time.frameCount;
+    }
+
     private void FixedUpdate()
     {
         foreach (var simulatedObject in SimulatedObjects)

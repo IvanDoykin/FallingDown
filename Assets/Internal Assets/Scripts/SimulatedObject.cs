@@ -7,6 +7,8 @@ public class SimulatedObject : MonoBehaviour
 {
     private const int SimulationFramesAmount = 60;
 
+    public int StartClientFrame = -1;
+
     public Dictionary<int, SimulationFrameData> framesData = new Dictionary<int, SimulationFrameData>();
     public List<int> frameKeys = new List<int>();
 
@@ -15,6 +17,7 @@ public class SimulatedObject : MonoBehaviour
     private void OnEnable()
     {
         ActionSimulator.SimulatedObjects.Add(this);
+        ActionSimulator.SyncClientStartFrame(this);
     }
 
     private void OnDisable()
@@ -24,7 +27,7 @@ public class SimulatedObject : MonoBehaviour
 
     public void AddFrame()
     {
-        if (frameKeys.Contains(Time.frameCount))
+        if (frameKeys.Contains(Time.frameCount) || StartClientFrame == -1)
             return;
 
         if (frameKeys.Count >= SimulationFramesAmount)
@@ -42,6 +45,7 @@ public class SimulatedObject : MonoBehaviour
     [Server]
     public void SetTransform(int frameId, float clientSubFrame)
     {
+        frameId = frameId + StartClientFrame - 1;
         Debug.Log("frameId = " + frameId);
         Debug.Log("lastFrame = " + frameKeys[frameKeys.Count - 1]);
 

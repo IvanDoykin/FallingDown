@@ -47,7 +47,7 @@ public class MouseLook : NetworkBehaviour
 
     public float RotationX { get; private set; } = 0;
 
-    [Client]
+    [ClientCallback]
     private void FixedUpdate()
     {
         if (axes == RotationAxes.MouseX)
