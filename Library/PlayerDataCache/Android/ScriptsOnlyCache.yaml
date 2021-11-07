@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - ActionSimulator
     - AutoConnector
     - Block
     - BlockItem
@@ -10,8 +11,10 @@ ScriptsOnlyBuild:
     - LevelNetwork
     - MouseLook
     - NetworkHUD
+    - Player
     - PlayerAnimator
-    - PlayerInput
+    - PlayerCollider
+    - SimulatedObject
     - UIToWorldWrapper
     Mirror.Components.dll:
     - Mirror.NetworkAnimator
@@ -174,94 +177,98 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3138}
     - Class: 114
-      Script: {instanceID: 3320}
+      Script: {instanceID: 3190}
     - Class: 114
-      Script: {instanceID: 3374}
+      Script: {instanceID: 3322}
     - Class: 114
-      Script: {instanceID: 3386}
+      Script: {instanceID: 3376}
     - Class: 114
-      Script: {instanceID: 3520}
+      Script: {instanceID: 3388}
     - Class: 114
-      Script: {instanceID: 3528}
+      Script: {instanceID: 3522}
     - Class: 114
-      Script: {instanceID: 3684}
+      Script: {instanceID: 3530}
     - Class: 114
-      Script: {instanceID: 3752}
+      Script: {instanceID: 3686}
     - Class: 114
-      Script: {instanceID: 3814}
+      Script: {instanceID: 3754}
     - Class: 114
-      Script: {instanceID: 3938}
+      Script: {instanceID: 3816}
     - Class: 114
-      Script: {instanceID: 3952}
+      Script: {instanceID: 3940}
     - Class: 114
-      Script: {instanceID: 4100}
+      Script: {instanceID: 3954}
     - Class: 114
-      Script: {instanceID: 4122}
+      Script: {instanceID: 4102}
     - Class: 114
-      Script: {instanceID: 4316}
+      Script: {instanceID: 4124}
     - Class: 114
-      Script: {instanceID: 4362}
+      Script: {instanceID: 4318}
     - Class: 114
-      Script: {instanceID: 4402}
+      Script: {instanceID: 4364}
     - Class: 114
-      Script: {instanceID: 4506}
+      Script: {instanceID: 4404}
     - Class: 114
       Script: {instanceID: 4508}
     - Class: 114
-      Script: {instanceID: 4580}
+      Script: {instanceID: 4510}
     - Class: 114
-      Script: {instanceID: 4662}
+      Script: {instanceID: 4582}
     - Class: 114
-      Script: {instanceID: 4706}
+      Script: {instanceID: 4664}
     - Class: 114
-      Script: {instanceID: 4878}
+      Script: {instanceID: 4708}
     - Class: 114
-      Script: {instanceID: 4994}
+      Script: {instanceID: 4880}
     - Class: 114
-      Script: {instanceID: 5356}
+      Script: {instanceID: 4996}
     - Class: 114
-      Script: {instanceID: 5540}
+      Script: {instanceID: 5358}
     - Class: 114
-      Script: {instanceID: 5590}
+      Script: {instanceID: 5544}
     - Class: 114
       Script: {instanceID: 5594}
     - Class: 114
-      Script: {instanceID: 5706}
+      Script: {instanceID: 5598}
     - Class: 114
-      Script: {instanceID: 5732}
+      Script: {instanceID: 5710}
     - Class: 114
-      Script: {instanceID: 5886}
+      Script: {instanceID: 5736}
     - Class: 114
-      Script: {instanceID: 5986}
+      Script: {instanceID: 5890}
     - Class: 114
-      Script: {instanceID: 6010}
+      Script: {instanceID: 5990}
     - Class: 114
-      Script: {instanceID: 6016}
+      Script: {instanceID: 6014}
     - Class: 114
-      Script: {instanceID: 6022}
+      Script: {instanceID: 6020}
     - Class: 114
-      Script: {instanceID: 6068}
+      Script: {instanceID: 6026}
     - Class: 114
-      Script: {instanceID: 6114}
+      Script: {instanceID: 6072}
     - Class: 114
       Script: {instanceID: 6120}
     - Class: 114
-      Script: {instanceID: 6158}
+      Script: {instanceID: 6126}
     - Class: 114
-      Script: {instanceID: 6194}
+      Script: {instanceID: 6164}
     - Class: 114
-      Script: {instanceID: 6416}
+      Script: {instanceID: 6200}
     - Class: 114
-      Script: {instanceID: 6490}
+      Script: {instanceID: 6422}
     - Class: 114
-      Script: {instanceID: 6698}
+      Script: {instanceID: 6496}
+    - Class: 114
+      Script: {instanceID: 6512}
+    - Class: 114
+      Script: {instanceID: 6706}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
       Script: {instanceID: 0}
-    - Class: 137
+    - Class: 135
       Script: {instanceID: 0}
-    - Class: 143
+    - Class: 137
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -321,23 +328,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 3138}
     - Class: 114
-      Script: {instanceID: 3320}
+      Script: {instanceID: 3322}
     - Class: 114
-      Script: {instanceID: 3386}
+      Script: {instanceID: 3388}
     - Class: 114
-      Script: {instanceID: 3444}
+      Script: {instanceID: 3446}
     - Class: 114
-      Script: {instanceID: 3938}
+      Script: {instanceID: 3940}
     - Class: 114
-      Script: {instanceID: 4994}
+      Script: {instanceID: 4996}
     - Class: 114
-      Script: {instanceID: 5886}
+      Script: {instanceID: 5402}
     - Class: 114
-      Script: {instanceID: 6022}
+      Script: {instanceID: 5890}
     - Class: 114
-      Script: {instanceID: 6114}
+      Script: {instanceID: 6026}
     - Class: 114
-      Script: {instanceID: 6158}
+      Script: {instanceID: 6120}
+    - Class: 114
+      Script: {instanceID: 6164}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -799,6 +808,12 @@ ScriptsOnlyBuild:
     assemblyName: SimpleWebTransport.dll
     namespaceName: Mirror.SimpleWeb
     className: SimpleWebTransport
+  - hash:
+      serializedVersion: 2
+      Hash: ceb6b36ece3a30dc81d1ddd7d39dfe12
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SimulatedObject
   - hash:
       serializedVersion: 2
       Hash: cf9f5cf2c3145a37ac07f00e50e460f9
@@ -1329,6 +1344,12 @@ ScriptsOnlyBuild:
     className: MonsterMovement
   - hash:
       serializedVersion: 2
+      Hash: 6fd2bb55b3ee5edb6040a1c5bccd0e07
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ActionSimulator
+  - hash:
+      serializedVersion: 2
       Hash: 306f6c6830d6725abf0598650905dcd4
     assemblyName: Mirror.Components.dll
     namespaceName: Mirror
@@ -1368,7 +1389,7 @@ ScriptsOnlyBuild:
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: Player
+    className: LocPlayer
   - hash:
       serializedVersion: 2
       Hash: 3165968ba45c74472d279ba04455fccb
@@ -1671,6 +1692,12 @@ ScriptsOnlyBuild:
     className: UniversalRenderPipelineEditorResources
   - hash:
       serializedVersion: 2
+      Hash: ceb6b36ece3a30dc81d1ddd7d39dfe12
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PlayerCollider
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -1695,10 +1722,10 @@ ScriptsOnlyBuild:
     className: ChatWindow
   - hash:
       serializedVersion: 2
-      Hash: fbfa64173630d889e152c87fdcf560ce
+      Hash: b7c053321aa42c27697e4ad788bfceaf
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: PlayerInput
+    className: Player
   - hash:
       serializedVersion: 2
       Hash: b5cdb5258d55ddfa2beedfa44db3e720

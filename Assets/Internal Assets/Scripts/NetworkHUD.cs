@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Mirror;
+using System.Net;
+using System.Linq;
 
 [RequireComponent(typeof(NetworkManager))]
 public class NetworkHUD : MonoBehaviour
@@ -20,7 +22,16 @@ public class NetworkHUD : MonoBehaviour
 
     private void Start()
     {
-        manager.networkAddress = "localhost";
+        manager.networkAddress = GetLocalIPv4();
+        text.text = manager.networkAddress;
+    }
+
+    private string GetLocalIPv4()
+    {
+        return Dns.GetHostEntry(Dns.GetHostName())
+            .AddressList.First(
+                f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            .ToString();
     }
 
     public void StartHost()
