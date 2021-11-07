@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
@@ -15,7 +13,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update()
     {
-        if (player.hasAuthority != true)
+        if (!player.hasAuthority)
             return;
 
         animator.SetFloat("Horizontal", Input.GetAxis("Horizontal"));

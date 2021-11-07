@@ -3,8 +3,7 @@ using Mirror;
 
 public abstract class HandleObject : NetworkBehaviour
 {
-    [SyncVar]
-    public Transform Parent;
+    [SyncVar] public Transform Parent;
 
     [SerializeField] private Item handleItem;
     public Item HandleItem

@@ -20,10 +20,10 @@ public class ActionSimulator : NetworkBehaviour
 
         action.Invoke();
 
-        //foreach (var simulatedObject in SimulatedObjects)
-        //{
-        //    simulatedObject.ResetTransform();
-        //}
+        foreach (var simulatedObject in SimulatedObjects)
+        {
+            simulatedObject.ResetTransform();
+        }
 
         Debug.Log("all done");
     }

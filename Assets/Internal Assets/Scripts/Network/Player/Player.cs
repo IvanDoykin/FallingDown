@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Mirror;
-using System.Collections;
 
 public class Player : NetworkBehaviour
 {
@@ -71,11 +69,12 @@ public class Player : NetworkBehaviour
             currentPlayer.SetItemInHands();
         }
 
-        if (hasAuthority != true)
+        if (!hasAuthority)
             return;
 
         cameraLook = GetComponentInChildren<MouseLook>();
         characterController = GetComponent<Rigidbody>();
+
         ui = GameObject.Find("[UI]").GetComponent<UIToWorldWrapper>();
         ui.Player = this;
 
@@ -87,7 +86,7 @@ public class Player : NetworkBehaviour
 
     public override void OnStopClient()
     {
-        if (hasAuthority != true)
+        if (!hasAuthority)
             return;
 
         Cursor.lockState = CursorLockMode.None;

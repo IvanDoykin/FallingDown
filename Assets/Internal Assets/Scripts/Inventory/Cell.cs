@@ -26,13 +26,4 @@ public class Cell
     {
         Item = null;
     }
-
-    //public void OnPointerDown(PointerEventData eventData)
-    //{
-    //    if (Item == null || inventory.FindEmptyCell() == null || inventory.HandleObjectsOperator.PlayerHand.GetComponentInChildren<HandleObject>() != null)
-    //        return;
-
-    //    inventory.HandleObjectsOperator.CreateItemInHands(Item);
-    //    RemoveItem();
-    //}
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -55,19 +54,15 @@ public class SimulatedObject : MonoBehaviour
         lastSavedFrame.Position = transform.position;
         lastSavedFrame.Rotation = transform.rotation;
 
-        SimulationFrameData simulationFrameData1;
-        if (framesData.TryGetValue(frameId - 1, out simulationFrameData1) == false)
+        if (!framesData.TryGetValue(frameId - 1, out SimulationFrameData simulationFrameData1))
             return;
 
-        SimulationFrameData simulationFrameData2;
-        if (framesData.TryGetValue(frameId, out simulationFrameData2) == false)
+        if (!framesData.TryGetValue(frameId, out SimulationFrameData simulationFrameData2))
             return;
 
         Debug.Log("Set transform");
         if (GetComponent<Player>() != null)
-        {
             GetComponent<Player>().transform.GetComponent<Animator>().enabled = false;
-        }
 
         else
         {
@@ -83,8 +78,6 @@ public class SimulatedObject : MonoBehaviour
         transform.rotation = lastSavedFrame.Rotation;
 
         if (GetComponent<Player>() != null)
-        {
             GetComponent<Player>().transform.GetComponent<Animator>().enabled = true;
-        }
     }
 }

@@ -56,29 +56,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Internal Assets\Scripts\Inventory\Inventory.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Network\LevelNetwork.cs" />
     <Compile Include="Assets\ParrelSync\Examples\CustomArgumentExample.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Items\Item.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Inventory\UIToWorldWrapper.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\Key.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Inventory\CellView.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Items\BlockItem.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\SimulatedObject.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Network\AutoConnector.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\MouseLook.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\ActionSimulator.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\LocPlayer.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\PlayerAnimator.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\Block.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\SimulationFrameData.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Items\KeyItem.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\NetworkHUD.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\HandleObjects\HandleObject.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\PlayerCollider.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Inventory\Panel.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Inventory\Cell.cs" />
-    <Compile Include="Assets\Internal Assets\Scripts\Player.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Mirror\Plugins\Mono.Cecil\Mono.CecilX.dll" />
@@ -806,6 +784,10 @@
     <ProjectReference Include="Mirror.Components.csproj">
       <Project>{57D2EE34-40B6-BF05-29F9-44E3C83A9F11}</Project>
       <Name>Mirror.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="InternalAssets.Scripts.csproj">
+      <Project>{4049E734-8BE3-5023-2933-2DBF53B3507B}</Project>
+      <Name>InternalAssets.Scripts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

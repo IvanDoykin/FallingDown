@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
@@ -20,15 +19,10 @@ public class CellView : MonoBehaviour, IPointerDownHandler
     public void Add(int value = 1)
     {
         amounts += value;
+        amountsText.enabled = amounts <= 0;
+
         if (amounts <= 0)
-        {
             amounts = 0;
-            amountsText.enabled = false;
-        }
-        else
-        {
-            amountsText.enabled = true;
-        }
 
         amountsText.text = amounts.ToString();
     }

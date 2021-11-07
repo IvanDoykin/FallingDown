@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
@@ -61,7 +59,6 @@ public class MouseLook : NetworkBehaviour
             RotationX = Mathf.Clamp(RotationX, minimumVert, maximumVert);
             float rotationY = transform.localEulerAngles.y;
             transform.localEulerAngles = new Vector3(RotationX, rotationY, 0);
-            //Debug.Log("Angles = " + transform.rotation.eulerAngles);
         }
     }
 }
